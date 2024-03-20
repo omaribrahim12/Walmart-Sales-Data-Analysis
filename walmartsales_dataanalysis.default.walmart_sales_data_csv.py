@@ -1,6 +1,6 @@
 # Databricks notebook source
 # MAGIC %sql
-# MAGIC SELECT * FROM `walmartsales_dataanalysis`.`default`.`walmart_sales_data_csv`
+# MAGIC SELECT * FROM `walmart`.`default`.`walmart_sales_data_csv`
 # MAGIC limit 5;
 
 # COMMAND ----------
@@ -23,26 +23,28 @@
 # MAGIC         ELSE "Evening"
 # MAGIC     END) AS time_of_day
 # MAGIC
-# MAGIC  FROM `walmartsales_dataanalysis`.`default`.`walmart_sales_data_csv`
+# MAGIC FROM `walmart`.`default`.`walmart_sales_data_csv`
+# MAGIC  limit 5
 # MAGIC ;
 
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC ALTER TABLE `walmartsales_dataanalysis`.`default`.`walmart_sales_data_csv` ADD COLUMN time_of_day VARCHAR(20);
+# MAGIC ALTER TABLE `walmart`.`default`.`walmart_sales_data_csv`
+# MAGIC ADD COLUMN time_of_day VARCHAR(20);
 # MAGIC
 
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC SELECT time_of_day FROM `walmartsales_dataanalysis`.`default`.`walmart_sales_data_csv`
+# MAGIC SELECT time_of_day FROM  `walmart`.`default`.`walmart_sales_data_csv`
 # MAGIC limit 5;
 
 # COMMAND ----------
 
 # MAGIC %sql
 # MAGIC
-# MAGIC update `walmartsales_dataanalysis`.`default`.`walmart_sales_data_csv`
+# MAGIC update  `walmart`.`default`.`walmart_sales_data_csv`
 # MAGIC set time_of_day=
 # MAGIC (
 # MAGIC   CASE
@@ -55,7 +57,7 @@
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC SELECT time_of_day FROM `walmartsales_dataanalysis`.`default`.`walmart_sales_data_csv`
+# MAGIC SELECT time_of_day FROM  `walmart`.`default`.`walmart_sales_data_csv`
 # MAGIC limit 5;
 
 # COMMAND ----------
@@ -68,7 +70,8 @@
 # MAGIC %sql
 # MAGIC select date,
 # MAGIC       dayofweek(date)
-# MAGIC from `walmartsales_dataanalysis`.`default`.`walmart_sales_data_csv`
+# MAGIC FROM `walmart`.`default`.`walmart_sales_data_csv` 
+# MAGIC limit 5;
 
 # COMMAND ----------
 
@@ -84,7 +87,8 @@
 # MAGIC select date,
 # MAGIC     DATE_FORMAT(date , 'MM')
 # MAGIC
-# MAGIC    from `walmartsales_dataanalysis`.`default`.`walmart_sales_data_csv`
+# MAGIC FROM `walmart`.`default`.`walmart_sales_data_csv`
+# MAGIC limit 5;
 
 # COMMAND ----------
 
@@ -97,7 +101,7 @@
 # MAGIC -- Q1 How many unique cities does the data have?
 # MAGIC
 # MAGIC select distinct city 
-# MAGIC from `walmartsales_dataanalysis`.`default`.`walmart_sales_data_csv`
+# MAGIC from  `walmart`.`default`.`walmart_sales_data_csv`
 
 # COMMAND ----------
 
@@ -106,7 +110,7 @@
 # MAGIC SELECT 
 # MAGIC 	DISTINCT city,
 # MAGIC     branch
-# MAGIC from `walmartsales_dataanalysis`.`default`.`walmart_sales_data_csv`
+# MAGIC from  `walmart`.`default`.`walmart_sales_data_csv`
 
 # COMMAND ----------
 
@@ -114,7 +118,7 @@
 # MAGIC -- How many unique product lines does the data have?
 # MAGIC SELECT
 # MAGIC 	DISTINCT `product line`
-# MAGIC from `walmartsales_dataanalysis`.`default`.`walmart_sales_data_csv`
+# MAGIC from  `walmart`.`default`.`walmart_sales_data_csv`
 # MAGIC
 
 # COMMAND ----------
@@ -125,7 +129,7 @@
 # MAGIC 	sum(Quantity)  as qty,
 # MAGIC   `Product line`
 # MAGIC   
-# MAGIC from `walmartsales_dataanalysis`.`default`.`walmart_sales_data_csv`
+# MAGIC from  `walmart`.`default`.`walmart_sales_data_csv`
 # MAGIC GROUP BY 2 
 # MAGIC ORDER BY 1 DESC;
 
@@ -136,7 +140,7 @@
 # MAGIC SELECT
 # MAGIC 	`product line`,
 # MAGIC 	SUM(total) as `total revenue`
-# MAGIC from `walmartsales_dataanalysis`.`default`.`walmart_sales_data_csv`
+# MAGIC from  `walmart`.`default`.`walmart_sales_data_csv`
 # MAGIC GROUP BY 1
 # MAGIC ORDER BY 2 DESC;
 
@@ -148,7 +152,7 @@
 # MAGIC 	branch,
 # MAGIC 	city,
 # MAGIC 	ROUND(SUM(total), 2) AS total_revenue
-# MAGIC from `walmartsales_dataanalysis`.`default`.`walmart_sales_data_csv`
+# MAGIC from  `walmart`.`default`.`walmart_sales_data_csv`
 # MAGIC GROUP BY city, branch 
 # MAGIC ORDER BY total_revenue DESC;
 # MAGIC
@@ -160,7 +164,7 @@
 # MAGIC SELECT
 # MAGIC 	`product line`,
 # MAGIC 	ROUND(SUM(`Tax 5%`), 2) as avg_tax
-# MAGIC from `walmartsales_dataanalysis`.`default`.`walmart_sales_data_csv`
+# MAGIC from  `walmart`.`default`.`walmart_sales_data_csv`
 # MAGIC GROUP BY `product line`
 # MAGIC ORDER BY avg_tax DESC;
 # MAGIC
@@ -173,7 +177,7 @@
 # MAGIC
 # MAGIC SELECT 
 # MAGIC 	AVG(quantity) AS avg_qnty
-# MAGIC from `walmartsales_dataanalysis`.`default`.`walmart_sales_data_csv`;
+# MAGIC from  `walmart`.`default`.`walmart_sales_data_csv`;
 # MAGIC
 # MAGIC SELECT
 # MAGIC 	`product line`,
@@ -181,7 +185,7 @@
 # MAGIC 		WHEN AVG(quantity) > 6 THEN "Good"
 # MAGIC         ELSE "Bad"
 # MAGIC     END AS remark
-# MAGIC from `walmartsales_dataanalysis`.`default`.`walmart_sales_data_csv`
+# MAGIC from  `walmart`.`default`.`walmart_sales_data_csv`
 # MAGIC GROUP BY `product line`;
 
 # COMMAND ----------
@@ -198,9 +202,9 @@
 # MAGIC select 
 # MAGIC 	branch, 
 # MAGIC     SUM(quantity) AS qnty
-# MAGIC from `walmartsales_dataanalysis`.`default`.`walmart_sales_data_csv` 
+# MAGIC from  `walmart`.`default`.`walmart_sales_data_csv`
 # MAGIC group by branch
-# MAGIC having SUM(quantity) > (select AVG(quantity)  from `walmartsales_dataanalysis`.`default`.`walmart_sales_data_csv` )
+# MAGIC having SUM(quantity) > (select AVG(quantity)  from  `walmart`.`default`.`walmart_sales_data_csv` )
 # MAGIC order by 2 desc;
 
 # COMMAND ----------
@@ -212,7 +216,7 @@
 # MAGIC 	gender,
 # MAGIC     `product line`,
 # MAGIC     COUNT(gender) AS total_cnt
-# MAGIC FROM `walmartsales_dataanalysis`.`default`.`walmart_sales_data_csv`
+# MAGIC FROM  `walmart`.`default`.`walmart_sales_data_csv`
 # MAGIC GROUP BY gender, `product line`
 # MAGIC
 # MAGIC ORDER BY total_cnt DESC;
@@ -224,7 +228,7 @@
 # MAGIC SELECT
 # MAGIC 	ROUND(AVG(rating), 2) as avg_rating,
 # MAGIC     `product line`
-# MAGIC FROM `walmartsales_dataanalysis`.`default`.`walmart_sales_data_csv`
+# MAGIC FROM  `walmart`.`default`.`walmart_sales_data_csv`
 # MAGIC GROUP BY `product line`
 # MAGIC ORDER BY avg_rating DESC;
 
@@ -240,7 +244,7 @@
 # MAGIC -- How many unique customer types does the data have?
 # MAGIC SELECT
 # MAGIC 	DISTINCT `customer type`
-# MAGIC FROM `walmartsales_dataanalysis`.`default`.`walmart_sales_data_csv`;
+# MAGIC FROM  `walmart`.`default`.`walmart_sales_data_csv`;
 # MAGIC
 
 # COMMAND ----------
@@ -250,7 +254,7 @@
 # MAGIC -- How many unique payment methods does the data have?
 # MAGIC SELECT
 # MAGIC 	DISTINCT payment
-# MAGIC FROM `walmartsales_dataanalysis`.`default`.`walmart_sales_data_csv`;
+# MAGIC FROM  `walmart`.`default`.`walmart_sales_data_csv`;
 # MAGIC
 
 # COMMAND ----------
@@ -261,7 +265,7 @@
 # MAGIC SELECT
 # MAGIC 	`customer type`,
 # MAGIC 	count(*) as count
-# MAGIC FROM `walmartsales_dataanalysis`.`default`.`walmart_sales_data_csv`
+# MAGIC FROM  `walmart`.`default`.`walmart_sales_data_csv`
 # MAGIC GROUP BY `customer type`
 # MAGIC ORDER BY count DESC;
 
@@ -272,7 +276,7 @@
 # MAGIC SELECT
 # MAGIC 	gender,
 # MAGIC 	COUNT(*) as gender_cnt
-# MAGIC FROM `walmartsales_dataanalysis`.`default`.`walmart_sales_data_csv`
+# MAGIC FROM  `walmart`.`default`.`walmart_sales_data_csv`
 # MAGIC GROUP BY gender
 # MAGIC ORDER BY gender_cnt DESC;
 
@@ -284,7 +288,7 @@
 # MAGIC SELECT
 # MAGIC 	gender,
 # MAGIC 	COUNT(*) as gender_cnt
-# MAGIC FROM `walmartsales_dataanalysis`.`default`.`walmart_sales_data_csv`
+# MAGIC FROM  `walmart`.`default`.`walmart_sales_data_csv`
 # MAGIC WHERE branch = "C"
 # MAGIC GROUP BY gender
 # MAGIC ORDER BY gender_cnt DESC;
@@ -297,7 +301,7 @@
 # MAGIC SELECT
 # MAGIC 	time_of_day,
 # MAGIC 	AVG(rating) AS avg_rating
-# MAGIC FROM `walmartsales_dataanalysis`.`default`.`walmart_sales_data_csv`
+# MAGIC FROM  `walmart`.`default`.`walmart_sales_data_csv`
 # MAGIC GROUP BY time_of_day
 # MAGIC ORDER BY avg_rating DESC;
 
@@ -314,7 +318,7 @@
 # MAGIC SELECT
 # MAGIC 	`Customer type`,
 # MAGIC 	SUM(total) AS total_revenue
-# MAGIC FROM `walmartsales_dataanalysis`.`default`.`walmart_sales_data_csv`
+# MAGIC FROM  `walmart`.`default`.`walmart_sales_data_csv`
 # MAGIC GROUP BY `Customer type`
 # MAGIC ORDER BY total_revenue;
 # MAGIC
@@ -326,7 +330,7 @@
 # MAGIC SELECT
 # MAGIC 	city,
 # MAGIC     ROUND(AVG(`Tax 5%`), 2) AS avg_tax_pct
-# MAGIC FROM `walmartsales_dataanalysis`.`default`.`walmart_sales_data_csv`
+# MAGIC FROM  `walmart`.`default`.`walmart_sales_data_csv`
 # MAGIC GROUP BY city 
 # MAGIC ORDER BY avg_tax_pct DESC;
 
@@ -337,7 +341,7 @@
 # MAGIC SELECT
 # MAGIC 	`Customer type`,
 # MAGIC 	AVG(`Tax 5%`) AS total_tax
-# MAGIC FROM `walmartsales_dataanalysis`.`default`.`walmart_sales_data_csv`
+# MAGIC FROM `walmart`.`default`.`walmart_sales_data_csv`
 # MAGIC GROUP BY `Customer type`
 # MAGIC ORDER BY total_tax;
 # MAGIC
